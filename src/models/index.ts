@@ -16,6 +16,7 @@ export interface ProgressStep {
 
 export interface StepProgressProps {
   steps: ProgressStep[];
+  currentStep: number;
   startingStep: number;
   wrapperClass?: string;
   progressClass?: string;

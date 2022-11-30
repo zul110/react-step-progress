@@ -21,6 +21,7 @@ function stepsReducer(steps: ProgressStep[], action: ReducerAction): ProgressSte
 function StepProgressBar(props: StepProgressProps): JSX.Element {
   const {
     steps,
+    currentStep,
     startingStep,
     wrapperClass,
     progressClass,
@@ -45,6 +46,15 @@ function StepProgressBar(props: StepProgressProps): JSX.Element {
       payload: { index: currentIndex, state: StepStates.CURRENT }
     });
   }, []);
+
+  React.useEffect(function () {
+    dispatch({
+      type: 'init',
+      payload: { index: currentStep, state: StepStates.CURRENT }
+    });
+
+    setCurrentIndex(currentStep);
+  }, [currentStep]);
 
   function submitHandler(): void {
     onSubmit();
@@ -97,11 +107,9 @@ function StepProgressBar(props: StepProgressProps): JSX.Element {
           return (
             <li
               key={i}
-              className={`${styles['progress-step']}${
-                step.state === StepStates.COMPLETED ? ` ${styles.completed}` : ''
-              }${step.state === StepStates.CURRENT ? ` ${styles.current}` : ''}${
-                step.state === StepStates.ERROR ? ` ${styles['has-error']}` : ''
-              } ${stepClass || ''}`}
+              className={`${styles['progress-step']}${step.state === StepStates.COMPLETED ? ` ${styles.completed}` : ''
+                }${step.state === StepStates.CURRENT ? ` ${styles.current}` : ''}${step.state === StepStates.ERROR ? ` ${styles['has-error']}` : ''
+                } ${stepClass || ''}`}
             >
               {step.state === StepStates.COMPLETED && (
                 <span className={styles['step-icon']}>
@@ -138,27 +146,24 @@ function StepProgressBar(props: StepProgressProps): JSX.Element {
 
       <div className={`${styles['step-buttons']} ${buttonWrapperClass || ''}`}>
         <a
-          className={`${styles['step-action-btn']} ${styles['action-btn-secondary']} ${
-            currentIndex === 0 ? styles.disabled : ''
-          } ${secondaryBtnClass || ''}`}
+          className={`${styles['step-action-btn']} ${styles['action-btn-secondary']} ${currentIndex === 0 ? styles.disabled : ''
+            } ${secondaryBtnClass || ''}`}
           onClick={prevHandler}
         >
           {previousBtnName ? previousBtnName : 'Previous'}
         </a>
         {currentIndex === state.length - 1 ? (
           <a
-            className={`${styles['step-action-btn']} ${styles['action-btn-primary']} ${
-              primaryBtnClass || ''
-            }`}
+            className={`${styles['step-action-btn']} ${styles['action-btn-primary']} ${primaryBtnClass || ''
+              }`}
             onClick={submitHandler}
           >
             {submitBtnName || 'Submit'}
           </a>
         ) : (
           <a
-            className={`${styles['step-action-btn']} ${styles['action-btn-primary']} ${
-              primaryBtnClass || ''
-            }`}
+            className={`${styles['step-action-btn']} ${styles['action-btn-primary']} ${primaryBtnClass || ''
+              }`}
             onClick={nextHandler}
           >
             {nextBtnName ? nextBtnName : 'Next'}

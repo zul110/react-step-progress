@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import StepProgressBar from 'react-step-progress';
 import 'react-step-progress/dist/index.css';
@@ -20,19 +20,33 @@ function step3Validator() {
 }
 
 function App() {
+  const [step, setStep] = useState(0);
+
   const onSubmit = () => {
     alert('submit data');
   };
+
+  useEffect(() => {
+    const stepElements = document.getElementsByClassName('home-content-step');
+
+    for (let i = 0; i < stepElements.length; i++) {
+      const step = stepElements[i];
+      step.removeEventListener('click', () => {});
+      step.addEventListener('click', () => setStep(i));
+    }
+  }, []);
 
   return (
     <div class="app">
       <StepProgressBar
         startingStep={0}
+        currentStep={step}
         wrapperClass="progress-wrapper-custom"
         onSubmit={onSubmit}
         submitBtnName="Υποβολή"
         previousBtnName="Πίσω"
         nextBtnName="Επόμενο"
+        stepClass="home-content-step"
         steps={[
           {
             label: 'Step 1',
